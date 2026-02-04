@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,32 +8,47 @@ import {
   TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRoute } from '@react-navigation/native';
 import SidebarIcon from '../../assets/images/SidebarIcon.svg';
 import Proicon from '../../assets/images/Proicon.svg';
 import AspectSelector from '../Components/AspectSelector';
-
+import Styles from '../Components/Styles';
+import Explore from '../Components/Explore';
 const Home = () => {
   const [text, setText] = useState('');
+  const [selectedStyle, setSelectedStyle] = useState('none');
+  const route = useRoute();
+
+  useEffect(() => {
+    if (route.params?.selectedStyle !== undefined) {
+      setSelectedStyle(route.params.selectedStyle);
+    }
+  }, [route.params?.selectedStyle]);
+
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.sideButton}
+          onPress={() => {
+            /* Sidebar icon press handler */
+          }}
+        >
+          <SidebarIcon width={30} height={30} />
+        </TouchableOpacity>
+        <Text style={styles.headertitle} numberOfLines={2}>
+          AI Image Generator
+        </Text>
+        <TouchableOpacity
+          style={styles.sideButton}
+          onPress={() => {
+            /* Click to open proscreen */
+          }}
+        >
+          <Proicon style={styles.headerProIcon} />
+        </TouchableOpacity>
+      </View>
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => {
-              /* Sidebar icon press handler */
-            }}
-          >
-            <SidebarIcon width={30} height={30} />
-          </TouchableOpacity>
-          <Text style={styles.headertitle}>AI Image Generator</Text>
-          <TouchableOpacity
-            onPress={() => {
-              /* Click to open proscreen */
-            }}
-          >
-            <Proicon style={styles.headerProIcon} />
-          </TouchableOpacity>
-        </View>
         {/* prompt code */}
         <Text style={styles.heading}>Prompt</Text>
         <TextInput
@@ -46,7 +61,15 @@ const Home = () => {
           textAlignVertical="top"
         />
         <Text style={styles.heading}>Select Aspect Ratio</Text>
-        <AspectSelector/>
+        <AspectSelector />
+
+        <Styles onChange={setSelectedStyle} value={selectedStyle} />
+        <Explore
+          onPressItem={item => console.log('pressed item', item.id)}
+          onPressGenerate={() =>
+            console.log('Generate pressed', { prompt: text, style: selectedStyle })
+          }
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -58,6 +81,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#050505',
+    // marginVertical:16,
   },
   content: {
     paddingTop: 0,
@@ -66,20 +90,31 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   header: {
-    height: 50,
+    minHeight: 50,
     width: '100%',
     color: '#ffffff',
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 3,
     justifyContent: 'space-between',
+    marginTop: 10,
     paddingHorizontal: 12,
-    paddingBottom: 16,
+    paddingVertical: 8,
+  },
+  sideButton: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headertitle: {
     color: '#ffffff',
-    fontSize: 25,
+    fontSize: 22,
     fontWeight: '600',
+    textAlign: 'center',
+    flex: 1,
+    marginHorizontal: 8,
+    lineHeight: 26,
+    includeFontPadding: false,
   },
   headerProIcon: {
     height: 35,
@@ -89,13 +124,14 @@ const styles = StyleSheet.create({
   heading: {
     color: '#ffffff',
     fontWeight: '600',
-    fontSize: 25,
-    padding: 16,
+    fontSize: 18,
+    paddingTop: 16,
+    paddingHorizontal: 5,
+    paddingVertical: 10,
   },
   promptInput: {
-    paddingTop: 16,
     width: '100%',
-    height: 130,
+    height: 120,
     color: '#ffffff',
     backgroundColor: '#1A1A1A',
     borderWidth: 1.5,

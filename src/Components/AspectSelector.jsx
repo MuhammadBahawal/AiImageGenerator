@@ -48,7 +48,7 @@ export default AspectSelector
 // preview sizing helper
 function getPreviewStyle(w, h) {
   // keep inside 36x36 area
-  const max = 28;
+  const max = 40;
   if (w === h) return { width: max, height: max };
 
   if (w > h) {
@@ -63,17 +63,22 @@ function getPreviewStyle(w, h) {
 const styles = StyleSheet.create({
   listContent: {
     paddingVertical: 8,
-    gap: 12, // RN 0.71+; if not working, use ItemSeparatorComponent
+    flex:1,
+    flexDirection:"row",
+    gap: 10, // RN 0.71+; if not working, use ItemSeparatorComponent
+    justifyContent:"center",
+    alignItems:"center"
   },
   card: {
-    width: 90,
-    height: 90,
+    width: 87,
+    height: 91,
     borderRadius: 8,
     backgroundColor: '#312107',
     borderWidth: 1,
     borderColor: '#2a2a2a',
     alignItems: 'center',
     justifyContent: 'center',
+    padding:5
   },
   cardActive: {
     borderColor: '#F5A623',
