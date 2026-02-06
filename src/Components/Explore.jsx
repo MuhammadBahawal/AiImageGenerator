@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   View,
@@ -8,7 +7,9 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const EXPLORE_DATA = [
   { id: '1', img: require('../../assets/images/asthetic.png'), isPro: true },
   { id: '2', img: require('../../assets/images/jocker.png'), isPro: true },
@@ -16,16 +17,12 @@ const EXPLORE_DATA = [
   { id: '4', img: require('../../assets/images/Robotic.png'), isPro: true },
 ];
 
-const navigation = useNavigation();
-
 const { width } = Dimensions.get('window');
 const GAP = 10;
 const PADDING = 16;
 const CARD_W = (width - PADDING * 4 - GAP) / 2;
 
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-const Explore = ({ onPressItem, onPressGenerate }) => {
+const Explore = ({ onPressItem, onPressGenerate, isGenerating }) => {
   const insets = useSafeAreaInsets();
   const renderItem = ({ item }) => {
     return (
@@ -65,13 +62,19 @@ const Explore = ({ onPressItem, onPressGenerate }) => {
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={onPressGenerate}
+          disabled={isGenerating}
           style={[
             styles.generateBtn,
             { bottom: Math.max(16, insets.bottom + 35) },
+            isGenerating && styles.generateBtnDisabled,
           ]}
           // onPress = {()=>navigation.navigate('Result')}
           >
-          <Text style={styles.generateText}>Generate Image</Text>
+          {isGenerating ? (
+            <ActivityIndicator color="#111" />
+          ) : (
+            <Text style={styles.generateText}>Generate Image</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
@@ -134,6 +137,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5A623',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  generateBtnDisabled: {
+    opacity: 0.7,
   },
   generateText: {
     color: '#111',

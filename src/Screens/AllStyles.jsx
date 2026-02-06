@@ -27,7 +27,10 @@ function AllStyles() {
     setSelected(id);
     navigation.navigate({
       name: 'MainTabs',
-      params: { screen: 'Image', params: { selectedStyle: id } },
+      params: {
+        screen: 'Image',
+        params: { screen: 'Home', params: { selectedStyle: id } },
+      },
       merge: true,
     });
   };

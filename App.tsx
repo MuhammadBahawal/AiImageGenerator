@@ -5,7 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Tabs from './src/navigation/Tabs';
 import AllStyles from './src/Screens/AllStyles';
-import Result from './src/Screens/Result'
+import Settings from './src/Screens/Settings';
+import Premium from './src/Screens/Premium';
+import { HistoryProvider } from './src/store/historyStore';
+import { SubscriptionProvider } from './src/store/subscriptionStore';
 
 
 const Stack = createNativeStackNavigator();
@@ -13,16 +16,30 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {/*  Bottom tab bar only here */}
-          <Stack.Screen name="MainTabs" component={Tabs} />
+      <SubscriptionProvider>
+        <HistoryProvider>
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              {/*  Bottom tab bar only here */}
+              <Stack.Screen name="MainTabs" component={Tabs} />
 
-          {/*  Navigate to this from your Styles component */}
-          <Stack.Screen name="AllStyles" component={AllStyles} />
-          <Stack.Screen name="Result" component={Result} />
-        </Stack.Navigator>
-      </NavigationContainer>
+              {/*  Navigate to this from your Styles component */}
+              <Stack.Screen name="AllStyles" component={AllStyles} />
+
+              <Stack.Screen
+                name="Settings"
+                component={Settings}
+                options={{ presentation: 'modal' }}
+              />
+              <Stack.Screen
+                name="Premium"
+                component={Premium}
+                options={{ presentation: 'modal' }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </HistoryProvider>
+      </SubscriptionProvider>
     </SafeAreaProvider>
   );
 }

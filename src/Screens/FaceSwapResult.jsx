@@ -6,7 +6,6 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
-  useWindowDimensions,
   Alert,
   Platform,
   PermissionsAndroid,
@@ -16,13 +15,12 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { getCameraRoll } from '../utils/cameraRoll';
 import AppHeader from '../Components/AppHeader';
 
-const FALLBACK_IMAGE = require('../../assets/images/jocker.png');
+const FALLBACK_IMAGE = require('../../assets/images/faceSwapImages/Rectangle 21573.png');
 
-const Result = () => {
+const FaceSwapResult = () => {
   const insets = useSafeAreaInsets();
-  const { width, height } = useWindowDimensions();
-  const route = useRoute();
   const navigation = useNavigation();
+  const route = useRoute();
   const tabBarSpace = 72 + 14;
 
   const imageParam = route.params?.image;
@@ -32,20 +30,67 @@ const Result = () => {
       : imageParam
     : FALLBACK_IMAGE;
 
-  const frameWidth = Math.min(width - 48, 360);
-  const frameHeight = Math.min(height * 0.62, frameWidth * 1.35);
+  const requestSavePermission = async () => {
+    if (Platform.OS !== 'android') {
+      return true;
+    }
+
+    const permission =
+      Platform.Version >= 33
+        ? PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
+        : PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+
+    const result = await PermissionsAndroid.request(permission, {
+      title: 'Storage Permission',
+      message: 'We need permission to save images to your gallery.',
+      buttonPositive: 'Allow',
+      buttonNegative: 'Cancel',
+    });
+
+    return result === PermissionsAndroid.RESULTS.GRANTED;
+  };
+
+  const handleSave = async () => {
+    try {
+      const granted = await requestSavePermission();
+      if (!granted) {
+        Alert.alert('Permission required', 'Please allow storage access.');
+        return;
+      }
+
+      const uri = typeof imageParam === 'string' ? imageParam : imageSource?.uri;
+      if (!uri) {
+        Alert.alert('Error', 'No image found to save.');
+        return;
+      }
+
+      const cameraRoll = getCameraRoll();
+      if (!cameraRoll?.save) {
+        Alert.alert(
+          'Save unavailable',
+          'CameraRoll is not linked. Please rebuild the app.',
+        );
+        return;
+      }
+
+      await cameraRoll.save(uri, { type: 'photo' });
+      Alert.alert('Saved', 'Image saved to your gallery.');
+    } catch (error) {
+      Alert.alert('Save failed', error?.message || 'Please try again.');
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <AppHeader
-        title="Image Result"
+        title="Face Swap Result"
         onLeftPress={() => navigation.goBack()}
         onRightPress={() => navigation.navigate('Premium')}
       />
 
       <View style={styles.content}>
-        <View style={[styles.imageFrame, { width: frameWidth, height: frameHeight }]}>
+        <View style={styles.imageFrame}>
           <Image source={imageSource} style={styles.image} />
         </View>
       </View>
@@ -59,50 +104,7 @@ const Result = () => {
         <TouchableOpacity
           activeOpacity={0.85}
           style={styles.saveButton}
-          onPress={async () => {
-            try {
-              if (Platform.OS === 'android') {
-                const permission =
-                  Platform.Version >= 33
-                    ? PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
-                    : PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
-
-                const result = await PermissionsAndroid.request(permission, {
-                  title: 'Storage Permission',
-                  message: 'We need permission to save images to your gallery.',
-                  buttonPositive: 'Allow',
-                  buttonNegative: 'Cancel',
-                });
-
-                if (result !== PermissionsAndroid.RESULTS.GRANTED) {
-                  Alert.alert('Permission required', 'Please allow storage access.');
-                  return;
-                }
-              }
-
-              const uri =
-                typeof imageParam === 'string' ? imageParam : imageSource?.uri;
-
-              if (!uri) {
-                Alert.alert('Error', 'No image found to save.');
-                return;
-              }
-
-              const cameraRoll = getCameraRoll();
-              if (!cameraRoll?.save) {
-                Alert.alert(
-                  'Save unavailable',
-                  'CameraRoll is not linked. Please rebuild the app.',
-                );
-                return;
-              }
-
-              await cameraRoll.save(uri, { type: 'photo' });
-              Alert.alert('Saved', 'Image saved to your gallery.');
-            } catch (error) {
-              Alert.alert('Save failed', error?.message || 'Please try again.');
-            }
-          }}
+          onPress={handleSave}
         >
           <Text style={styles.saveText}>Save Image</Text>
         </TouchableOpacity>
@@ -111,7 +113,7 @@ const Result = () => {
   );
 };
 
-export default Result;
+export default FaceSwapResult;
 
 const styles = StyleSheet.create({
   container: {
@@ -125,6 +127,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   imageFrame: {
+    width: '100%',
+    aspectRatio: 3 / 4,
     borderRadius: 24,
     padding: 6,
     backgroundColor: '#0B0B0B',

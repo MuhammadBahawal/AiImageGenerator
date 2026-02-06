@@ -3,21 +3,27 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  TouchableOpacity,
   Text,
   TextInput,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute } from '@react-navigation/native';
-import SidebarIcon from '../../assets/images/SidebarIcon.svg';
-import Proicon from '../../assets/images/Proicon.svg';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import AspectSelector from '../Components/AspectSelector';
 import Styles from '../Components/Styles';
 import Explore from '../Components/Explore';
+import { generateImage } from '../services/imageGenerationService';
+import { useHistory } from '../store/historyStore';
+import { useSubscription } from '../store/subscriptionStore';
+import AppHeader from '../Components/AppHeader';
 const Home = () => {
   const [text, setText] = useState('');
   const [selectedStyle, setSelectedStyle] = useState('none');
+  const [generating, setGenerating] = useState(false);
   const route = useRoute();
+  const navigation = useNavigation();
+  const { addItem } = useHistory();
+  const { isActive: isPremiumActive } = useSubscription();
 
   useEffect(() => {
     if (route.params?.selectedStyle !== undefined) {
@@ -25,29 +31,57 @@ const Home = () => {
     }
   }, [route.params?.selectedStyle]);
 
+  const handleGenerate = async () => {
+    if (!text.trim()) {
+      Alert.alert('Prompt required', 'Please enter a prompt.');
+      return;
+    }
+
+    try {
+      setGenerating(true);
+      const result = await generateImage({
+        prompt: text,
+        style: selectedStyle,
+      });
+
+      await addItem({
+        type: 'image',
+        image: result.image,
+        meta: { prompt: text, style: selectedStyle },
+      });
+
+      navigation.navigate('Result', {
+        image: result.image,
+        prompt: text,
+        style: selectedStyle,
+      });
+    } catch (error) {
+      Alert.alert('Generate failed', error?.message || 'Please try again.');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleExplorePress = (item) => {
+    if (item.isPro && !isPremiumActive) {
+      navigation.navigate('Premium');
+      return;
+    }
+
+    navigation.navigate('Result', {
+      image: item.img,
+      prompt: text,
+      style: selectedStyle,
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.sideButton}
-          onPress={() => {
-            /* Sidebar icon press handler */
-          }}
-        >
-          <SidebarIcon width={30} height={30} />
-        </TouchableOpacity>
-        <Text style={styles.headertitle} numberOfLines={2}>
-          AI Image Generator
-        </Text>
-        <TouchableOpacity
-          style={styles.sideButton}
-          onPress={() => {
-            /* Click to open proscreen */
-          }}
-        >
-          <Proicon style={styles.headerProIcon} />
-        </TouchableOpacity>
-      </View>
+      <AppHeader
+        title="AI Image Generator"
+        onLeftPress={() => navigation.navigate('Settings')}
+        onRightPress={() => navigation.navigate('Premium')}
+      />
       <ScrollView contentContainerStyle={styles.content}>
         {/* prompt code */}
         <Text style={styles.heading}>Prompt</Text>
@@ -65,10 +99,9 @@ const Home = () => {
 
         <Styles onChange={setSelectedStyle} value={selectedStyle} />
         <Explore
-          onPressItem={item => console.log('pressed item', item.id)}
-          onPressGenerate={() =>
-            console.log('Generate pressed', { prompt: text, style: selectedStyle })
-          }
+          onPressItem={handleExplorePress}
+          onPressGenerate={handleGenerate}
+          isGenerating={generating}
         />
       </ScrollView>
     </SafeAreaView>
@@ -88,37 +121,6 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
     paddingBottom: 10,
-  },
-  header: {
-    minHeight: 50,
-    width: '100%',
-    color: '#ffffff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  sideButton: {
-    width: 36,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headertitle: {
-    color: '#ffffff',
-    fontSize: 22,
-    fontWeight: '600',
-    textAlign: 'center',
-    flex: 1,
-    marginHorizontal: 8,
-    lineHeight: 26,
-    includeFontPadding: false,
-  },
-  headerProIcon: {
-    height: 35,
-    width: 35,
   },
   //  heading style
   heading: {
