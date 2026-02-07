@@ -28,7 +28,7 @@ const BASE_TAB_STYLE = {
   left: 18,
   right: 18,
   bottom: 14,
-  height: 72,
+  height: 82,
   borderTopLeftRadius: 34,
   borderTopRightRadius: 34,
   borderBottomLeftRadius: 0,
@@ -104,7 +104,7 @@ export default function Tabs() {
             return (
               <Image
                 source={icon}
-                style={{ width: 24, height: 22, tintColor: color }}
+                style={{ width: 24, height: 22, tintColor: color , }}
               />
             );
           }

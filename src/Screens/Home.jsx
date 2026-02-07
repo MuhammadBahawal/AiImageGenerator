@@ -82,7 +82,11 @@ const Home = () => {
         onLeftPress={() => navigation.navigate('Settings')}
         onRightPress={() => navigation.navigate('Premium')}
       />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+      >
         {/* prompt code */}
         <Text style={styles.heading}>Prompt</Text>
         <TextInput

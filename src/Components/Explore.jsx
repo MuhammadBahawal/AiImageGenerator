@@ -55,7 +55,7 @@ const Explore = ({ onPressItem, onPressGenerate, isGenerating }) => {
           disabled={isGenerating}
           style={[
             styles.generateBtn,
-            { bottom: Math.max(16, insets.bottom + 35) },
+            { bottom: Math.max(16, insets.bottom + 10) },
             isGenerating && styles.generateBtnDisabled,
           ]}
           // onPress = {()=>navigation.navigate('Result')}
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
     bottom: 10,
-    height: 56,
+    height: 46,
     borderRadius: 28,
     backgroundColor: '#F5A623',
     alignItems: 'center',

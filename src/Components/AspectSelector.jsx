@@ -63,11 +63,10 @@ function getPreviewStyle(w, h) {
 const styles = StyleSheet.create({
   listContent: {
     paddingVertical: 8,
-    flex:1,
-    flexDirection:"row",
+    paddingHorizontal: 8,
+    flexDirection: 'row',
     gap: 10, // RN 0.71+; if not working, use ItemSeparatorComponent
-    justifyContent:"center",
-    alignItems:"center"
+    alignItems: 'center',
   },
   card: {
     width: 77,
