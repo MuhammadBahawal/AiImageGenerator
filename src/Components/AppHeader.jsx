@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SidebarIcon from '../../assets/images/SidebarIcon.svg';
+import Backbnticon from '../../assets/images/Backbnticon.svg';
 import Proicon from '../../assets/images/Proicon.svg';
 
 const AppHeader = ({
@@ -10,8 +11,10 @@ const AppHeader = ({
   onRightPress,
   leftDisabled = false,
   rightDisabled = false,
+  leftIcon = 'menu',
 }) => {
   const navigation = useNavigation();
+  const LeftIcon = leftIcon === 'back' ? Backbnticon : SidebarIcon;
 
   const handleLeft = () => {
     if (onLeftPress) {
@@ -37,7 +40,7 @@ const AppHeader = ({
         activeOpacity={0.8}
         disabled={leftDisabled}
       >
-        <SidebarIcon width={26} height={26} />
+        <LeftIcon width={26} height={26} />
       </TouchableOpacity>
 
       <Text style={styles.title} numberOfLines={1}>

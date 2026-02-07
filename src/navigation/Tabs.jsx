@@ -66,7 +66,10 @@ function FaceSwapStackScreen() {
   return (
     <FaceSwapStack.Navigator screenOptions={{ headerShown: false }}>
       <FaceSwapStack.Screen name="FaceSwapHome" component={FaceSwap} />
-      <FaceSwapStack.Screen name="FaceSwapCategory" component={FaceSwapCategory} />
+      <FaceSwapStack.Screen
+        name="FaceSwapCategory"
+        component={FaceSwapCategory}
+      />
       <FaceSwapStack.Screen name="FaceSwapUpload" component={FaceSwapUpload} />
       <FaceSwapStack.Screen name="FaceSwapResult" component={FaceSwapResult} />
     </FaceSwapStack.Navigator>
@@ -91,7 +94,7 @@ export default function Tabs() {
           marginTop: 4,
         },
 
-        tabBarActiveTintColor: '#F5B301',   // yellow
+        tabBarActiveTintColor: '#F5B301', // yellow
         tabBarInactiveTintColor: '#A7A7A7', // grey
 
         //  icons
@@ -101,7 +104,7 @@ export default function Tabs() {
             return (
               <Image
                 source={icon}
-                style={{ width: 22, height: 22, tintColor: color }}
+                style={{ width: 24, height: 22, tintColor: color }}
               />
             );
           }

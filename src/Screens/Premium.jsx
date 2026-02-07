@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSubscription } from '../store/subscriptionStore';
-
+import CrossIcon from '../../assets/images/CrossIcon.svg';
 const HERO_IMAGE = require('../../assets/images/jocker.png');
 
 const OPTIONS = [
@@ -63,7 +63,7 @@ const Premium = () => {
           onPress={() => navigation.goBack()}
           activeOpacity={0.8}
         >
-          <Ionicons name="close" size={22} color="#ffffff" />
+          <CrossIcon width={22} height={22} />
         </TouchableOpacity>
       </View>
 

@@ -8,12 +8,13 @@ import {
   StatusBar,
   Alert,
   Platform,
-  PermissionsAndroid,
+  Linking,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getCameraRoll } from '../utils/cameraRoll';
 import AppHeader from '../Components/AppHeader';
+import { requestAndroidSavePermission } from '../utils/mediaPermissions';
 
 const FALLBACK_IMAGE = require('../../assets/images/faceSwapImages/Rectangle 21573.png');
 
@@ -30,31 +31,42 @@ const FaceSwapResult = () => {
       : imageParam
     : FALLBACK_IMAGE;
 
+  const openSettings = () => {
+    Linking.openSettings().catch(() => {
+      Alert.alert('Unable to open settings');
+    });
+  };
+
+  const showPermissionAlert = (message) => {
+    Alert.alert('Permission required', message, [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Open Settings', onPress: openSettings },
+    ]);
+  };
+
   const requestSavePermission = async () => {
     if (Platform.OS !== 'android') {
       return true;
     }
 
-    const permission =
-      Platform.Version >= 33
-        ? PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
-        : PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+    const response = await requestAndroidSavePermission();
+    if (response.granted) {
+      return true;
+    }
 
-    const result = await PermissionsAndroid.request(permission, {
-      title: 'Storage Permission',
-      message: 'We need permission to save images to your gallery.',
-      buttonPositive: 'Allow',
-      buttonNegative: 'Cancel',
-    });
+    if (response.blocked) {
+      showPermissionAlert('Please allow storage access in settings to continue.');
+      return false;
+    }
 
-    return result === PermissionsAndroid.RESULTS.GRANTED;
+    Alert.alert('Permission required', 'Please allow storage access.');
+    return false;
   };
 
   const handleSave = async () => {
     try {
       const granted = await requestSavePermission();
       if (!granted) {
-        Alert.alert('Permission required', 'Please allow storage access.');
         return;
       }
 
@@ -85,6 +97,7 @@ const FaceSwapResult = () => {
       <StatusBar barStyle="light-content" />
       <AppHeader
         title="Face Swap Result"
+        leftIcon="back"
         onLeftPress={() => navigation.goBack()}
         onRightPress={() => navigation.navigate('Premium')}
       />

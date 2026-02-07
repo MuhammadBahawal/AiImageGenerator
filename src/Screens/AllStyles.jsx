@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Backbnticon from '../../assets/images/Backbnticon.svg';
 import STYLE_OPTIONS from '../data/styleOptions';
 
 const { width } = Dimensions.get('window');
@@ -75,7 +75,7 @@ function AllStyles() {
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="chevron-back" size={24} color="#ffffff" />
+          <Backbnticon width={24} height={24} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>AI Image Generator</Text>
         <View style={styles.headerSpacer} />

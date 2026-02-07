@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import CrossIcon from '../../assets/images/CrossIcon.svg';
+import ChevronForward from '../../assets/images/ChevronForward.svg';
 
 const Settings = () => {
   const navigation = useNavigation();
@@ -22,7 +23,7 @@ const Settings = () => {
           onPress={() => navigation.goBack()}
           activeOpacity={0.8}
         >
-          <Ionicons name="close" size={22} color="#ffffff" />
+          <CrossIcon width={22} height={22} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Setting</Text>
         <View style={styles.headerSpacer} />
@@ -45,31 +46,31 @@ const Settings = () => {
         <Text style={styles.sectionTitle}>Account</Text>
         <TouchableOpacity style={styles.row} activeOpacity={0.7}>
           <Text style={styles.rowText}>Restore Purchase</Text>
-          <Ionicons name="chevron-forward" size={18} color="#bfbfbf" />
+          <ChevronForward width={18} height={18} />
         </TouchableOpacity>
 
         <Text style={styles.sectionTitle}>Help & Feedback</Text>
         <TouchableOpacity style={styles.row} activeOpacity={0.7}>
           <Text style={styles.rowText}>Contact Us</Text>
-          <Ionicons name="chevron-forward" size={18} color="#bfbfbf" />
+          <ChevronForward width={18} height={18} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.row} activeOpacity={0.7}>
           <Text style={styles.rowText}>Rate Us</Text>
-          <Ionicons name="chevron-forward" size={18} color="#bfbfbf" />
+          <ChevronForward width={18} height={18} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.row} activeOpacity={0.7}>
           <Text style={styles.rowText}>Share App</Text>
-          <Ionicons name="chevron-forward" size={18} color="#bfbfbf" />
+          <ChevronForward width={18} height={18} />
         </TouchableOpacity>
 
         <Text style={styles.sectionTitle}>Legal</Text>
         <TouchableOpacity style={styles.row} activeOpacity={0.7}>
           <Text style={styles.rowText}>Terms of Use</Text>
-          <Ionicons name="chevron-forward" size={18} color="#bfbfbf" />
+          <ChevronForward width={18} height={18} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.row} activeOpacity={0.7}>
           <Text style={styles.rowText}>Privacy Policy</Text>
-          <Ionicons name="chevron-forward" size={18} color="#bfbfbf" />
+          <ChevronForward width={18} height={18} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>

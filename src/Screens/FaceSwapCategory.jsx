@@ -54,6 +54,7 @@ const FaceSwapCategory = () => {
       <StatusBar barStyle="light-content" />
       <AppHeader
         title={category?.title ?? 'Face Swap'}
+        leftIcon="back"
         onLeftPress={() => navigation.goBack()}
         onRightPress={() => navigation.navigate('Premium')}
       />

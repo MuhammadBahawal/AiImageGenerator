@@ -3,13 +3,13 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
   Image,
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 const EXPLORE_DATA = [
   { id: '1', img: require('../../assets/images/asthetic.png'), isPro: true },
   { id: '2', img: require('../../assets/images/jocker.png'), isPro: true },
@@ -24,41 +24,31 @@ const CARD_W = (width - PADDING * 4 - GAP) / 2;
 
 const Explore = ({ onPressItem, onPressGenerate, isGenerating }) => {
   const insets = useSafeAreaInsets();
-  const renderItem = ({ item }) => {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.85}
-        onPress={() => onPressItem?.(item)}
-        style={[styles.card, { width: CARD_W, height: CARD_W }]}
-      >
-        <Image source={item.img} style={styles.image} />
-
-        {/* Crown badge */}
-        {item.isPro && (
-          <View style={styles.badge}>
-            <Text style={styles.badgeIcon}>👑</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-    );
-  };
 
   return (
     <View style={styles.wrap}>
       <Text style={styles.title}>Explore</Text>
 
       <View style={styles.gridWrap}>
-        <FlatList
-          data={EXPLORE_DATA}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          columnWrapperStyle={{ gap: GAP }}
-          contentContainerStyle={{ gap: GAP, paddingBottom: 90 }}
-          renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
-        />
+        <View style={styles.grid}>
+          {EXPLORE_DATA.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              activeOpacity={0.85}
+              onPress={() => onPressItem?.(item)}
+              style={[styles.card, { width: CARD_W, height: CARD_W }]}
+            >
+              <Image source={item.img} style={styles.image} />
 
-        {/* Bottom CTA button (overlay) */}
+              {item.isPro && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeIcon}>👑</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          ))}
+        </View>
+
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={onPressGenerate}
@@ -69,7 +59,7 @@ const Explore = ({ onPressItem, onPressGenerate, isGenerating }) => {
             isGenerating && styles.generateBtnDisabled,
           ]}
           // onPress = {()=>navigation.navigate('Result')}
-          >
+        >
           {isGenerating ? (
             <ActivityIndicator color="#111" />
           ) : (
@@ -97,6 +87,12 @@ const styles = StyleSheet.create({
 
   gridWrap: {
     position: 'relative',
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: GAP,
+    paddingBottom: 90,
   },
 
   card: {

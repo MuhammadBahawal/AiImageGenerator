@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
     alignItems:"center"
   },
   card: {
-    width: 87,
-    height: 91,
+    width: 77,
+    height: 81,
     borderRadius: 8,
     backgroundColor: '#312107',
     borderWidth: 1,
@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   previewBox: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 10,
     backgroundColor: '#312107',
     alignItems: 'center',

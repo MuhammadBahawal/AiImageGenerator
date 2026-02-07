@@ -9,7 +9,6 @@ import {
   Alert,
   ActivityIndicator,
   Platform,
-  PermissionsAndroid,
   ActionSheetIOS,
   Modal,
   Pressable,
@@ -22,6 +21,10 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { swapFace } from '../services/faceSwapService';
 import { useHistory } from '../store/historyStore';
 import AppHeader from '../Components/AppHeader';
+import {
+  requestAndroidCameraPermission,
+  requestAndroidGalleryPermission,
+} from '../utils/mediaPermissions';
 
 const FaceSwapUpload = () => {
   const insets = useSafeAreaInsets();
@@ -56,32 +59,16 @@ const FaceSwapUpload = () => {
   };
 
   const requestPermission = async (type) => {
-    if (Platform.OS !== 'android') {
-      return true;
-    }
-
-    const permission =
+    const response =
       type === 'camera'
-        ? PermissionsAndroid.PERMISSIONS.CAMERA
-        : Platform.Version >= 33
-          ? PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
-          : PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE;
+        ? await requestAndroidCameraPermission()
+        : await requestAndroidGalleryPermission();
 
-    const result = await PermissionsAndroid.request(permission, {
-      title: type === 'camera' ? 'Camera Permission' : 'Gallery Permission',
-      message:
-        type === 'camera'
-          ? 'We need access to your camera so you can take a photo.'
-          : 'We need access to your photos so you can upload an image.',
-      buttonPositive: 'Allow',
-      buttonNegative: 'Cancel',
-    });
-
-    if (result === PermissionsAndroid.RESULTS.GRANTED) {
+    if (response.granted) {
       return true;
     }
 
-    if (result === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+    if (response.blocked) {
       showPermissionAlert('Please allow access in settings to continue.');
       return false;
     }
@@ -195,6 +182,7 @@ const FaceSwapUpload = () => {
       <StatusBar barStyle="light-content" />
       <AppHeader
         title="Face Swap"
+        leftIcon="back"
         onLeftPress={() => navigation.goBack()}
         onRightPress={() => navigation.navigate('Premium')}
       />
