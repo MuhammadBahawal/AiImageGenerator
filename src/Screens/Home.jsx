@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
-  View,
   ScrollView,
   Text,
   TextInput,

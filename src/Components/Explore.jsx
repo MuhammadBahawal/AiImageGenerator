@@ -21,16 +21,18 @@ const { width } = Dimensions.get('window');
 const GAP = 10;
 const PADDING = 16;
 const CARD_W = (width - PADDING * 4 - GAP) / 2;
+const TAB_BAR_HEIGHT = 74;
 
 const Explore = ({ onPressItem, onPressGenerate, isGenerating }) => {
   const insets = useSafeAreaInsets();
+  const ctaBottomOffset = Math.max(insets.bottom + TAB_BAR_HEIGHT + 14, 96);
 
   return (
     <View style={styles.wrap}>
       <Text style={styles.title}>Explore</Text>
 
       <View style={styles.gridWrap}>
-        <View style={styles.grid}>
+        <View style={[styles.grid, { paddingBottom: ctaBottomOffset + 56 }]}>
           {EXPLORE_DATA.map((item) => (
             <TouchableOpacity
               key={item.id}
@@ -55,7 +57,7 @@ const Explore = ({ onPressItem, onPressGenerate, isGenerating }) => {
           disabled={isGenerating}
           style={[
             styles.generateBtn,
-            { bottom: Math.max(16, insets.bottom + 10) },
+            { bottom: ctaBottomOffset },
             isGenerating && styles.generateBtnDisabled,
           ]}
           // onPress = {()=>navigation.navigate('Result')}

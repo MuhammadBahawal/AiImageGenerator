@@ -17,6 +17,12 @@ const { width } = Dimensions.get('window');
 const GAP = 10;
 const PADDING = 16;
 const CARD_SIZE = (width - PADDING * 2 - GAP * 2) / 3;
+const GRID_CONTENT_STYLE = {
+  paddingHorizontal: PADDING,
+  paddingBottom: 24,
+  gap: GAP,
+};
+const GRID_COLUMN_STYLE = { gap: GAP };
 
 function AllStyles() {
   const navigation = useNavigation();
@@ -87,12 +93,8 @@ function AllStyles() {
         data={STYLE_OPTIONS}
         keyExtractor={item => item.id}
         numColumns={3}
-        columnWrapperStyle={{ gap: GAP }}
-        contentContainerStyle={{
-          paddingHorizontal: PADDING,
-          paddingBottom: 24,
-          gap: GAP,
-        }}
+        columnWrapperStyle={GRID_COLUMN_STYLE}
+        contentContainerStyle={GRID_CONTENT_STYLE}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
       />

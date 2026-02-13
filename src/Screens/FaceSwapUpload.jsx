@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  StatusBar,
   Alert,
   ActivityIndicator,
   Platform,
@@ -16,6 +15,7 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { SystemBars } from 'react-native-edge-to-edge';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { swapFace } from '../services/faceSwapService';
@@ -179,7 +179,7 @@ const FaceSwapUpload = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <SystemBars style="light" />
       <AppHeader
         title="Face Swap"
         leftIcon="back"
@@ -232,6 +232,8 @@ const FaceSwapUpload = () => {
       <Modal
         animationType="fade"
         transparent
+        statusBarTranslucent
+        navigationBarTranslucent
         visible={showPickerSheet}
         onRequestClose={() => setShowPickerSheet(false)}
       >

@@ -5,10 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { SystemBars } from 'react-native-edge-to-edge';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSubscription } from '../store/subscriptionStore';
 import CrossIcon from '../../assets/images/CrossIcon.svg';
@@ -56,7 +56,7 @@ const Premium = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <SystemBars style="light" />
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.closeButton}

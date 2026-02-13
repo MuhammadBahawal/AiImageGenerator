@@ -1,4 +1,12 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import storage from '../utils/storage';
 import { toStoredImage } from '../utils/imageSources';
 
@@ -13,6 +21,7 @@ const createId = () =>
 export function HistoryProvider({ children }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const itemsRef = useRef([]);
 
   useEffect(() => {
     let mounted = true;
@@ -40,16 +49,21 @@ export function HistoryProvider({ children }) {
     };
   }, []);
 
-  const persist = async (nextItems) => {
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
+
+  const persist = useCallback(async (nextItems) => {
+    itemsRef.current = nextItems;
     setItems(nextItems);
     try {
       await storage.setItem(STORAGE_KEY, JSON.stringify(nextItems));
     } catch (error) {
       // ignore persistence failures
     }
-  };
+  }, []);
 
-  const addItem = async ({ type, image, meta }) => {
+  const addItem = useCallback(async ({ type, image, meta }) => {
     const storedImage = toStoredImage(
       image,
       type === 'faceSwap' ? 'faceSwapPlaceholder' : 'imagePlaceholder',
@@ -63,13 +77,13 @@ export function HistoryProvider({ children }) {
       createdAt: Date.now(),
     };
 
-    const nextItems = [newItem, ...items].slice(0, MAX_ITEMS);
+    const nextItems = [newItem, ...itemsRef.current].slice(0, MAX_ITEMS);
     await persist(nextItems);
-  };
+  }, [persist]);
 
-  const clearItems = async () => {
+  const clearItems = useCallback(async () => {
     await persist([]);
-  };
+  }, [persist]);
 
   const value = useMemo(
     () => ({
@@ -78,7 +92,7 @@ export function HistoryProvider({ children }) {
       addItem,
       clearItems,
     }),
-    [items, loading],
+    [items, loading, addItem, clearItems],
   );
 
   return <HistoryContext.Provider value={value}>{children}</HistoryContext.Provider>;

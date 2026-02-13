@@ -5,13 +5,13 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  StatusBar,
   Alert,
   Platform,
   Linking,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { SystemBars } from 'react-native-edge-to-edge';
 import { getCameraRoll } from '../utils/cameraRoll';
 import AppHeader from '../Components/AppHeader';
 import { requestAndroidSavePermission } from '../utils/mediaPermissions';
@@ -94,7 +94,7 @@ const FaceSwapResult = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <SystemBars style="light" />
       <AppHeader
         title="Face Swap Result"
         leftIcon="back"

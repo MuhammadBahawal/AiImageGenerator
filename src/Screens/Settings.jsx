@@ -4,10 +4,10 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { SystemBars } from 'react-native-edge-to-edge';
 import CrossIcon from '../../assets/images/CrossIcon.svg';
 import ChevronForward from '../../assets/images/ChevronForward.svg';
 
@@ -16,7 +16,7 @@ const Settings = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <SystemBars style="light" />
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.closeButton}

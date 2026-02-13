@@ -1,9 +1,10 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Home from '../Screens/Home';
 import Result from '../Screens/Result';
@@ -27,10 +28,10 @@ const BASE_TAB_STYLE = {
   position: 'absolute',
   left: 18,
   right: 18,
-  bottom: 14,
-  height: 82,
-  borderTopLeftRadius: 34,
-  borderTopRightRadius: 34,
+  bottom: 18,
+  height: 74,
+  borderTopLeftRadius: 30,
+  borderTopRightRadius: 30,
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
   overflow: 'hidden',
@@ -45,12 +46,19 @@ const BASE_TAB_STYLE = {
   shadowOffset: { width: 0, height: 6 },
 };
 
-const getHiddenStyle = (route, hiddenRoutes) => {
+const styles = StyleSheet.create({
+  tabIcon: {
+    width: 24,
+    height: 24,
+  },
+});
+
+const getHiddenStyle = (route, hiddenRoutes, tabBarStyle) => {
   const focusedRoute = getFocusedRouteNameFromRoute(route) ?? route?.name;
   if (hiddenRoutes.includes(focusedRoute)) {
     return { display: 'none' };
   }
-  return BASE_TAB_STYLE;
+  return tabBarStyle;
 };
 
 function ImageStackScreen() {
@@ -77,16 +85,22 @@ function FaceSwapStackScreen() {
 }
 
 export default function Tabs() {
+  const insets = useSafeAreaInsets();
+  const tabBarStyle = {
+    ...BASE_TAB_STYLE,
+    bottom: Math.max(insets.bottom + 0),
+  };
+
   return (
     <Tab.Navigator
       initialRouteName="Image"
       screenOptions={({ route }) => ({
         headerShown: false,
 
-        tabBarStyle: BASE_TAB_STYLE,
-
+        tabBarStyle,
         tabBarItemStyle: {
           paddingVertical: 10,
+          paddingHorizontal: 6,
         },
 
         tabBarLabelStyle: {
@@ -98,13 +112,15 @@ export default function Tabs() {
         tabBarInactiveTintColor: '#A7A7A7', // grey
 
         //  icons
+        // eslint-disable-next-line react/no-unstable-nested-components
         tabBarIcon: ({ color, focused }) => {
           const icon = TAB_ICONS[route.name];
           if (icon) {
             return (
               <Image
                 source={icon}
-                style={{ width: 24, height: 22, tintColor: color , }}
+                resizeMode="contain"
+                style={[styles.tabIcon, { tintColor: color }]}
               />
             );
           }
@@ -127,14 +143,14 @@ export default function Tabs() {
             'FaceSwapUpload',
             'FaceSwapResult',
             'FaceSwapCategory',
-          ]),
+          ], tabBarStyle),
         })}
       />
       <Tab.Screen
         name="Image"
         component={ImageStackScreen}
         options={({ route }) => ({
-          tabBarStyle: getHiddenStyle(route, ['Result']),
+          tabBarStyle: getHiddenStyle(route, ['Result'], tabBarStyle),
         })}
       />
       <Tab.Screen name="History" component={History} />

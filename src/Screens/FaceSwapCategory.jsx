@@ -1,16 +1,15 @@
 import React, { useMemo } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   FlatList,
   Image,
-  StatusBar,
   Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { SystemBars } from 'react-native-edge-to-edge';
 import FACE_SWAP_SECTIONS from '../data/faceSwapOptions';
 import AppHeader from '../Components/AppHeader';
 
@@ -18,6 +17,12 @@ const { width } = Dimensions.get('window');
 const GAP = 10;
 const PADDING = 16;
 const CARD_SIZE = (width - PADDING * 2 - GAP * 2) / 3;
+const GRID_CONTENT_STYLE = {
+  paddingHorizontal: PADDING,
+  paddingBottom: 24,
+  gap: GAP,
+};
+const GRID_COLUMN_STYLE = { gap: GAP };
 
 const FaceSwapCategory = () => {
   const navigation = useNavigation();
@@ -51,7 +56,7 @@ const FaceSwapCategory = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <SystemBars style="light" />
       <AppHeader
         title={category?.title ?? 'Face Swap'}
         leftIcon="back"
@@ -63,12 +68,8 @@ const FaceSwapCategory = () => {
         data={data}
         keyExtractor={item => item.id}
         numColumns={3}
-        columnWrapperStyle={{ gap: GAP }}
-        contentContainerStyle={{
-          paddingHorizontal: PADDING,
-          paddingBottom: 24,
-          gap: GAP,
-        }}
+        columnWrapperStyle={GRID_COLUMN_STYLE}
+        contentContainerStyle={GRID_CONTENT_STYLE}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
       />
