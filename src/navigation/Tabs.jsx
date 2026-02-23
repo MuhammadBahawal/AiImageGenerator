@@ -29,7 +29,7 @@ const BASE_TAB_STYLE = {
   left: 18,
   right: 18,
   bottom: 18,
-  height: 74,
+  height: 64,
   borderTopLeftRadius: 30,
   borderTopRightRadius: 30,
   borderBottomLeftRadius: 0,
