@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import LinearGradient from 'react-native-linear-gradient';
 
 import Home from '../Screens/Home';
 import Result from '../Screens/Result';
@@ -26,24 +27,25 @@ const TAB_ICONS = {
 
 const BASE_TAB_STYLE = {
   position: 'absolute',
-  left: 18,
-  right: 18,
-  bottom: 18,
+  left: 0,
+  right: 0,
+  bottom: 0,
   height: 64,
-  borderTopLeftRadius: 30,
-  borderTopRightRadius: 30,
+  borderTopLeftRadius: 28,
+  borderTopRightRadius: 28,
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
   overflow: 'hidden',
-  backgroundColor: '#242424',
-  borderTopWidth: 0,
+  backgroundColor: '#121212',
+  borderTopWidth: 1,
+  borderTopColor: 'rgba(255,255,255,0.08)',
 
   // shadow
-  elevation: 8, // android
+  elevation: 14, // android
   shadowColor: '#000', // ios
-  shadowOpacity: 0.25,
-  shadowRadius: 8,
-  shadowOffset: { width: 0, height: 6 },
+  shadowOpacity: 0.32,
+  shadowRadius: 16,
+  shadowOffset: { width: 0, height: -6 },
 };
 
 const styles = StyleSheet.create({
@@ -51,7 +53,23 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
+  tabBarBackground: {
+    ...StyleSheet.absoluteFillObject,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
 });
+
+const renderTabBarBackground = () => (
+  <LinearGradient
+    colors={['#2A2A2A', '#1C1C1C', '#131313']}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 1 }}
+    style={styles.tabBarBackground}
+  />
+);
 
 const getHiddenStyle = (route, hiddenRoutes, tabBarStyle) => {
   const focusedRoute = getFocusedRouteNameFromRoute(route) ?? route?.name;
@@ -86,9 +104,12 @@ function FaceSwapStackScreen() {
 
 export default function Tabs() {
   const insets = useSafeAreaInsets();
+  const safeBottom = Math.max(insets.bottom, 8);
   const tabBarStyle = {
     ...BASE_TAB_STYLE,
-    bottom: Math.max(insets.bottom + 0),
+    height: 54 + safeBottom,
+    paddingTop: 4,
+    paddingBottom: safeBottom,
   };
 
   return (
@@ -96,20 +117,27 @@ export default function Tabs() {
       initialRouteName="Image"
       screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarBackground: renderTabBarBackground,
 
         tabBarStyle,
         tabBarItemStyle: {
-          paddingVertical: 10,
+          paddingVertical: 3,
           paddingHorizontal: 6,
+        },
+        tabBarIconStyle: {
+          marginTop: -2,
         },
 
         tabBarLabelStyle: {
-          fontSize: 11,
-          marginTop: 4,
+          fontSize: 12,
+          marginTop: 0,
+          fontWeight: '700',
+          letterSpacing: 0.2,
+          transform: [{ translateY: -1 }],
         },
 
-        tabBarActiveTintColor: '#F5B301', // yellow
-        tabBarInactiveTintColor: '#A7A7A7', // grey
+        tabBarActiveTintColor: '#FFD248',
+        tabBarInactiveTintColor: '#9A9A9A',
 
         //  icons
         // eslint-disable-next-line react/no-unstable-nested-components
